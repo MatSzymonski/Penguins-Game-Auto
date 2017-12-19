@@ -141,9 +141,11 @@
   <ItemGroup>
     <ClCompile Include="IOFileManager.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="PenguinManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOFileManager.h" />
+    <ClInclude Include="PenguinManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data.txt" />

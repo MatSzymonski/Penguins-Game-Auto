@@ -21,9 +21,15 @@
     <ClCompile Include="IOFileManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PenguinManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IOFileManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PenguinManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

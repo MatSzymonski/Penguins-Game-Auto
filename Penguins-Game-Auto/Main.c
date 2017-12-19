@@ -1,5 +1,18 @@
+//Max 6 players
+//Max 10 penguins per player
+//25 chances to find correct neighbour tile out of 6 (TryToMovePenguin function)
+
+/* TO DO 
+- ITERATIONS FILE
+- CHECK IF PRINTING WINNER WORKS
+*/
+
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #include "IOFileManager.h" //Header with reading and writing IO file functions
+#include "PenguinManager.h" //Header with placing and moving penguins functions
 
 //Data from input file
 int currentPlayer;
@@ -13,82 +26,126 @@ int numberOfMapRows;
 int numberOfMapColumns;
 char map[20][20];
 
+int tilesTakenThisTurn[10][2]; //Places where penguins were moved in this turn
+int failedTurnsIterations = 0; //When all penguins failed to move
+int numberOfPenguinsBlocked = 0; //Penguins permananently blocked in this turn
 
-//Functions declaration
+//-------------------FUNCTIONS-DECLARATION------------------
+
+void FinishTheGame();
+void SetUpRandomizer();
 void IncreaseCurrentPlayerIndex();
+void CheckGamePhase();
+int IndexOfPlayerWithScore(int);
 void StrCopy(char*, char*);
 
-int main() //MATEUSZ SZYMOÑSKI
-{
+//--------------------------MAIN----------------------------
+int main()
+{	
+	SetUpRandomizer();
 	ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
+	CheckGamePhase();
 
-	//int i; for (i = 0; i < numberOfMapRows; i++) { printf("%s", map[i]); } //PRINT THE MAP(map); Extend this 
-	PrintDataFile();
-
-	if (gamePhase == "placement")
-	{
-
-		//PLACE PENGUIN(p);
-
-
-		if (numberOfPlacedPenguins >= numberOfPlayers * numberOfPenguinPerPlayer) //Change game phase
-		{
-			StrCopy("movement\n", gamePhase);
-		}
+	if (currentPlayer == 0 || currentPlayer > numberOfPlayers) { currentPlayer = 1; } //Fixing improper currentPlayer variable
+	//PrintDataFile(); //[DEBUG]
+	
+	if (strncmp(gamePhase, "placement", 9) == 0) //PLACEMENT
+	{	
+		PlacePenguin();	
 	}
-	else if (gamePhase == "movement")
+	else //MOVEMENT
 	{
-		int p;
-		for (p = 0; p < numberOfPenguinPerPlayer; p++)
-		{
-			int ways; //= FIND POSSIBLE WAYS OF MOVEMENT FOR PENGUIN();
-			if (ways > 0)
-			{
-				//FIND THE BEST WAY FOR PENGUIN(p);
-				//MOVE PENGUIN(p); (1. Collect fish from the current tile(change playerScores[] 2. Place penguin on next tile(change mapRows[][] data))
-			}
-			else
-			{
-				//penguin is blocked - move next penguin or end this turn if all other penguins were moved already
-			}
-		}
+		CreateTilesTakenThisTurnArray();
+		FindPenguinAndMove(0,0);
 	}
 
-	/*
-	!!!I/O File need to be extended to store what players doesn't have movement possibility!!!
-	if(If none of the penguins of all players have possibility to move)
-	{
-	PRINT ALL SCORES AND PICK THE WINNER();
-	}
-	*/
+	if (numberOfPenguinsBlocked == numberOfPenguinPerPlayer) { failedTurnsIterations++; } //Check if all penguins are blocked
+	if (failedTurnsIterations > 100) { FinishTheGame(); return 0; } //Finish the game when cant move 100th time
 
-	IncreaseCurrentPlayerIndex(); //Increase current player index (Read David's concept)
-								  //CREATE OUTPUT FILE(); (function in IOFileManager.c)
+	IncreaseCurrentPlayerIndex(); //Increase current player index
+	WriteDataToOutputFile(); //Create output file (function in IOFileManager.c)
+								 
 	return 0;
-
 }
 
+//------------------------OTHER-FUNCTIONS---------------------------
 
-void IncreaseCurrentPlayerIndex() //MATEUSZ SZYMOÑSKI
+void FinishTheGame() 
 {
-	if (currentPlayer == 0)
+	//Create sorted array
+	int sortedPlayersScores[10];
+	int x; for (x = 0; x < numberOfPlayers; x++)
 	{
-		currentPlayer = 2; //Double incremantation (Read David's concept)
+		sortedPlayersScores[x] = playersScores[x];
+	}
+
+	//Sort scores array
+	int i, j, temp;
+	for (i = 1; i < numberOfPlayers + 1; i++)
+	{
+		for (j = i + 2; j < numberOfPlayers + 1; j++)
+		{
+			if (sortedPlayersScores[i] > sortedPlayersScores[j])
+			{
+				temp = sortedPlayersScores[i];
+				sortedPlayersScores[i] = sortedPlayersScores[j];
+				sortedPlayersScores[j] = temp;
+			}
+		}
+	}
+
+	//Display results
+	int z; for (z = 1; z < numberOfPlayers + 1; z++) 
+	{
+		printf("GAME OVER\nResults:\n");
+		printf("%d: Player %d - %d points", z, IndexOfPlayerWithScore(sortedPlayersScores[z]), sortedPlayersScores[z]);
+	}
+}
+
+void SetUpRandomizer() 
+{
+	int seed;
+	time_t tt;
+	seed = time(&tt);
+	srand(seed);
+}
+
+void IncreaseCurrentPlayerIndex()
+{
+	if (currentPlayer == numberOfPlayers)
+	{
+		currentPlayer = 1;
 	}
 	else
 	{
-		if (currentPlayer == numberOfPlayers)
+		currentPlayer++;
+	}
+}
+
+void CheckGamePhase()
+{
+	if (strncmp(gamePhase, "placement", 9) == 0) 
+	{
+		if (numberOfPlacedPenguins >= numberOfPlayers * numberOfPenguinPerPlayer) //Change game phase if all players placed their penguins
 		{
-			currentPlayer = 1;
-		}
-		else
-		{
-			currentPlayer++;
+			StrCopy("movement ", gamePhase);
 		}
 	}
 }
 
-void StrCopy(char* str_1, char* str_2)
+int IndexOfPlayerWithScore(int score) //Finding index of player with given score
+{
+	int i; for (int i = 0; i < numberOfPlayers; i++)
+	{
+		if (playersScores[i] == score)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
+void StrCopy(char* str_1, char* str_2) //String copy
 {
 	while (*str_1 != '\0')
 	{
@@ -96,3 +153,4 @@ void StrCopy(char* str_1, char* str_2)
 		++str_2;
 	}
 }
+
