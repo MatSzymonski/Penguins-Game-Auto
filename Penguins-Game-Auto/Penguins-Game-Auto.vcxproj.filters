@@ -37,5 +37,8 @@
     <Text Include="data.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="iterations.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 //Max 6 players
 //Max 10 penguins per player
 //25 chances to find correct neighbour tile out of 6 (TryToMovePenguin function)
+//20 failed turns to game end (main function)
 
 /* TO DO 
 - ITERATIONS FILE
@@ -27,7 +28,7 @@ int numberOfMapColumns;
 char map[20][20];
 
 int tilesTakenThisTurn[10][2]; //Places where penguins were moved in this turn
-int failedTurnsIterations = 0; //When all penguins failed to move
+int failedTurnsIterations; //When all penguins failed to move
 int numberOfPenguinsBlocked = 0; //Penguins permananently blocked in this turn
 
 //-------------------FUNCTIONS-DECLARATION------------------
@@ -44,10 +45,11 @@ int main()
 {	
 	SetUpRandomizer();
 	ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
+	ReadIterationsFile(); //Read failedTurnsIterations from separate file (function in IOFileManager.c)
 	CheckGamePhase();
 
 	if (currentPlayer == 0 || currentPlayer > numberOfPlayers) { currentPlayer = 1; } //Fixing improper currentPlayer variable
-	//PrintDataFile(); //[DEBUG]
+	PrintDataFile(); //[DEBUG]
 	
 	if (strncmp(gamePhase, "placement", 9) == 0) //PLACEMENT
 	{	
@@ -60,11 +62,11 @@ int main()
 	}
 
 	if (numberOfPenguinsBlocked == numberOfPenguinPerPlayer) { failedTurnsIterations++; } //Check if all penguins are blocked
-	if (failedTurnsIterations > 100) { FinishTheGame(); return 0; } //Finish the game when cant move 100th time
+	if (failedTurnsIterations > 20) { FinishTheGame(); return 0; } //Finish the game when cant move 100th time
 
 	IncreaseCurrentPlayerIndex(); //Increase current player index
 	WriteDataToOutputFile(); //Create output file (function in IOFileManager.c)
-								 
+	WriteIterationsFile(); //Write failedTurnsIterations to separate file (function in IOFileManager.c)							 
 	return 0;
 }
 
@@ -74,7 +76,7 @@ void FinishTheGame()
 {
 	//Create sorted array
 	int sortedPlayersScores[10];
-	int x; for (x = 0; x < numberOfPlayers; x++)
+	int x; for (x = 0; x < numberOfPlayers + 1; x++)
 	{
 		sortedPlayersScores[x] = playersScores[x];
 	}
@@ -83,9 +85,9 @@ void FinishTheGame()
 	int i, j, temp;
 	for (i = 1; i < numberOfPlayers + 1; i++)
 	{
-		for (j = i + 2; j < numberOfPlayers + 1; j++)
+		for (j = i + 1; j < numberOfPlayers + 1; j++)
 		{
-			if (sortedPlayersScores[i] > sortedPlayersScores[j])
+			if (sortedPlayersScores[i] < sortedPlayersScores[j])
 			{
 				temp = sortedPlayersScores[i];
 				sortedPlayersScores[i] = sortedPlayersScores[j];
@@ -95,10 +97,12 @@ void FinishTheGame()
 	}
 
 	//Display results
+	printf("GAME OVER\nResults:\n");
+	//printf("P1: %d\n", sortedPlayersScores[1]);
+
 	int z; for (z = 1; z < numberOfPlayers + 1; z++) 
-	{
-		printf("GAME OVER\nResults:\n");
-		printf("%d: Player %d - %d points", z, IndexOfPlayerWithScore(sortedPlayersScores[z]), sortedPlayersScores[z]);
+	{	
+		printf("%d: Player %d - %d points\n", z, IndexOfPlayerWithScore(sortedPlayersScores[z]), sortedPlayersScores[z]);
 	}
 }
 
@@ -135,7 +139,7 @@ void CheckGamePhase()
 
 int IndexOfPlayerWithScore(int score) //Finding index of player with given score
 {
-	int i; for (int i = 0; i < numberOfPlayers; i++)
+	int i; for (int i = 1; i < numberOfPlayers+1; i++)
 	{
 		if (playersScores[i] == score)
 		{

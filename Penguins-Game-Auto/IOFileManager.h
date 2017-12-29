@@ -5,3 +5,5 @@ void PrintDataFile();
 void ReadDataFromInputFile();
 void WriteDataToOutputFile();
 void ReadPlayersScores();
+void ReadIterationsFile();
+void WriteIterationsFile();

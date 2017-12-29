@@ -13,6 +13,8 @@ extern int numberOfMapColumns;
 
 extern char map[20][20];
 
+extern int failedTurnsIterations; //When all penguins failed to move
+
 char scoresRow[25]; //first row of datafile as string
 
 //---------------------READING-FROM-I/O-FILE---------------------------
@@ -22,7 +24,7 @@ void ReadDataFromInputFile() //Loop through all lines of the InputFile and assig
 	int line = 0;
 	numberOfMapRows = 0;
 	FILE* inputFile = fopen("data.txt", "r"); //Open the file for reading
-	if (inputFile == NULL) { printf("Error opening file\n"); exit(0); } //Check if the file has been opened
+	if (inputFile == NULL) { printf("Error opening data file\n"); exit(0); } //Check if the file has been opened
 	//else { printf("Success opening file\n"); } //[DEBUG]
 	char tempData[25]; //String where lines of text in the file will be stored temporary
 
@@ -71,7 +73,7 @@ void ReadPlayersScores() //Read players scores from IOFile to playersScoresArray
 void WriteDataToOutputFile()
 {
 	FILE* outputFile = fopen("data.txt", "w"); //Open the file for writing
-	if (outputFile == NULL) { printf("Error opening file\n"); exit(0);  }
+	if (outputFile == NULL) { printf("Error opening data file\n"); exit(0);  }
 	//else { printf("Success opening file\n"); } //[DEBUG]
 
 	int line;
@@ -96,6 +98,35 @@ void WriteDataToOutputFile()
 	fclose(outputFile);
 }
 
+//---------------------READING-FROM-ITERATIONS-FILE-----------------
+
+void ReadIterationsFile() //Assign iterations data to the variable
+{
+	FILE* iterationsFile = fopen("iterations.txt", "r"); //Open the file for reading
+	if (iterationsFile == NULL) { printf("No iterations file found - Creating new one\n"); FILE* iterationsFile = fopen("iterations.txt", "w"); failedTurnsIterations = 0; return; } //Check if the file has been opened
+	//else { printf("Success opening file\n"); } //[DEBUG]
+	char tempData[25]; //String where lines of text in the file will be stored temporary
+	//FILE* iterationsFile = fopen("iterations.txt", "w"); failedTurnsIterations = 0;
+	while (!feof(iterationsFile)) //Read data and save it to variable
+	{
+		fgets(tempData, 25, iterationsFile);
+		failedTurnsIterations = atoi(tempData);
+	}
+	fclose(iterationsFile);
+}
+
+//---------------------WRITING-TO-ITERATIONS-FILE-------------------
+
+void WriteIterationsFile()
+{
+	FILE* iterationsFile = fopen("iterations.txt", "w"); //Open the file for writing
+	if (iterationsFile == NULL) { printf("Error opening iterations file\n"); exit(0); }
+	//else { printf("Success opening file\n"); } //[DEBUG]
+	fprintf(iterationsFile, "%d ", failedTurnsIterations);	
+	fclose(iterationsFile);
+}
+
+
 //------------------------OTHER-FUNCTIONS---------------------------
 
 void PrintDataFile() //For debugging
@@ -112,5 +143,6 @@ void PrintDataFile() //For debugging
 	printf("\nPenguins on map: %d\n", numberOfPlacedPenguins);
 	printf("Map rows: %d\n", numberOfMapRows);
 	printf("Map columns: %d\n", numberOfMapColumns);
+	printf("Failed turn iterations: %d\n", failedTurnsIterations);
 	printf("\n######################\n");
 }
