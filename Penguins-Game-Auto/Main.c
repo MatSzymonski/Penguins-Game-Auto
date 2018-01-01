@@ -3,11 +3,6 @@
 //25 chances to find correct neighbour tile out of 6 (TryToMovePenguin function)
 //20 failed turns to game end (main function)
 
-/* TO DO 
-- ITERATIONS FILE
-- CHECK IF PRINTING WINNER WORKS
-*/
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -49,7 +44,7 @@ int main()
 	CheckGamePhase();
 
 	if (currentPlayer == 0 || currentPlayer > numberOfPlayers) { currentPlayer = 1; } //Fixing improper currentPlayer variable
-	PrintDataFile(); //[DEBUG]
+	//PrintDataFile(); //[DEBUG]
 	
 	if (strncmp(gamePhase, "placement", 9) == 0) //PLACEMENT
 	{	
@@ -98,8 +93,6 @@ void FinishTheGame()
 
 	//Display results
 	printf("GAME OVER\nResults:\n");
-	//printf("P1: %d\n", sortedPlayersScores[1]);
-
 	int z; for (z = 1; z < numberOfPlayers + 1; z++) 
 	{	
 		printf("%d: Player %d - %d points\n", z, IndexOfPlayerWithScore(sortedPlayersScores[z]), sortedPlayersScores[z]);
@@ -139,7 +132,7 @@ void CheckGamePhase()
 
 int IndexOfPlayerWithScore(int score) //Finding index of player with given score
 {
-	int i; for (int i = 1; i < numberOfPlayers+1; i++)
+	int i; for (i = 1; i < numberOfPlayers+1; i++)
 	{
 		if (playersScores[i] == score)
 		{
