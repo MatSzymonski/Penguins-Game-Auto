@@ -24,7 +24,7 @@ void ReadDataFromInputFile() //Loop through all lines of the InputFile and assig
 	int line = 0;
 	numberOfMapRows = 0;
 	FILE* inputFile = fopen("data.txt", "r"); //Open the file for reading
-	if (inputFile == NULL) { printf("Error opening data file\n"); exit(0); } //Check if the file has been opened
+	if (inputFile == NULL) { printf("Error opening data file\n"); } //Check if the file has been opened
 	//else { printf("Success opening file\n"); } //[DEBUG]
 	char tempData[25]; //String where lines of text in the file will be stored temporary
 
@@ -128,6 +128,14 @@ void WriteIterationsFile()
 
 
 //------------------------OTHER-FUNCTIONS---------------------------
+void StrCopy(char* str_1, char* str_2) //String copy
+{
+	while (*str_1 != '\0')
+	{
+		*str_2 = *str_1++;
+		++str_2;
+	}
+}
 
 void PrintDataFile() //For debugging
 {
@@ -138,7 +146,7 @@ void PrintDataFile() //For debugging
 	printf("\nNumber of players: %d\n", numberOfPlayers);
 	printf("Number of penguins per player: %d\n", numberOfPenguinPerPlayer);
 	printf("Game phase: %s", gamePhase);
-	for (int i = 0; i < numberOfMapRows; i++) { printf("%s", map[i]); }
+	int j; for (j  = 0; j < numberOfMapRows; j++) { printf("%s", map[j]); }
 
 	printf("\nPenguins on map: %d\n", numberOfPlacedPenguins);
 	printf("Map rows: %d\n", numberOfMapRows);

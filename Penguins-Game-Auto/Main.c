@@ -21,11 +21,10 @@ char gamePhase[25];
 int numberOfMapRows;
 int numberOfMapColumns;
 char map[20][20];
-
-int tilesTakenThisTurn[10][2]; //Places where penguins were moved in this turn
-int failedTurnsIterations; //When all penguins failed to move
+ 
 int numberOfPenguinsBlocked = 0; //Penguins permananently blocked in this turn
 
+int failedTurnsIterations; //When all penguins failed to move
 //-------------------FUNCTIONS-DECLARATION------------------
 
 void FinishTheGame();
@@ -38,30 +37,37 @@ void StrCopy(char*, char*);
 //--------------------------MAIN----------------------------
 int main()
 {	
-	SetUpRandomizer();
-	ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
-	ReadIterationsFile(); //Read failedTurnsIterations from separate file (function in IOFileManager.c)
-	CheckGamePhase();
 
-	if (currentPlayer == 0 || currentPlayer > numberOfPlayers) { currentPlayer = 1; } //Fixing improper currentPlayer variable
-	//PrintDataFile(); //[DEBUG]
+		SetUpRandomizer();
+		ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
+		ReadIterationsFile(); //Read failedTurnsIterations from separate file (function in IOFileManager.c)
+		CheckGamePhase();
 	
-	if (strncmp(gamePhase, "placement", 9) == 0) //PLACEMENT
-	{	
-		PlacePenguin();	
-	}
-	else //MOVEMENT
-	{
-		CreateTilesTakenThisTurnArray();
-		FindPenguinAndMove(0,0);
-	}
+		if (currentPlayer == 0 || currentPlayer > numberOfPlayers) { currentPlayer = 1; } //Fixing improper currentPlayer variable
+																						  //PrintDataFile(); //[DEBUG]
+		if (strncmp(gamePhase, "placement", 9) == 0) //PLACEMENT
+		{
+			PlacePenguin();
+		}
+		else //MOVEMENT
+		{
+			CreateTilesWithCurrentPlayerPenguinsArray();
+			FindAllCurrentPlayerPenguins();	printf("1");
+			if (numberOfPenguinsBlocked == numberOfPenguinPerPlayer) //If all penguins are blocked add one more to failedTurnsIterations else move penguin
+			{
+				failedTurnsIterations++;
+				if (failedTurnsIterations > 20) { FinishTheGame(); return 0; } //Finish the game when cant move 100th time
+			}
+			else
+			{
+				MovePenguin();
+			}
+		}
+		IncreaseCurrentPlayerIndex(); //Increase current player index
+		WriteDataToOutputFile(); //Create output file (function in IOFileManager.c)
+		WriteIterationsFile(); //Write failedTurnsIterations to separate file (function in IOFileManager.c)							 		
+	
 
-	if (numberOfPenguinsBlocked == numberOfPenguinPerPlayer) { failedTurnsIterations++; } //Check if all penguins are blocked
-	if (failedTurnsIterations > 20) { FinishTheGame(); return 0; } //Finish the game when cant move 100th time
-
-	IncreaseCurrentPlayerIndex(); //Increase current player index
-	WriteDataToOutputFile(); //Create output file (function in IOFileManager.c)
-	WriteIterationsFile(); //Write failedTurnsIterations to separate file (function in IOFileManager.c)							 
 	return 0;
 }
 
@@ -140,14 +146,5 @@ int IndexOfPlayerWithScore(int score) //Finding index of player with given score
 		}
 	}
 	return 0;
-}
-
-void StrCopy(char* str_1, char* str_2) //String copy
-{
-	while (*str_1 != '\0')
-	{
-		*str_2 = *str_1++;
-		++str_2;
-	}
 }
 

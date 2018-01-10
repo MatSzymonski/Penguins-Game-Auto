@@ -7,3 +7,4 @@ void WriteDataToOutputFile();
 void ReadPlayersScores();
 void ReadIterationsFile();
 void WriteIterationsFile();
+void StrCopy(char*, char*);

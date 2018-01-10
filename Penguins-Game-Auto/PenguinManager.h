@@ -2,9 +2,12 @@
 //-------------------FUNCTIONS-DECLARATION------------------
 
 void PlacePenguin();
-void FindPenguinAndMove(int, int);
-void TryToMovePenguin(int, int);
-void MovePenguinToNewTile(int, int, int, int);
+void FindAllCurrentPlayerPenguins();
+void MovePenguin();
+int CheckIfIsBlocked(int, int);
+int RandomizeTileAndChangeMap(int, int);
+void ChangeMap(int, int, int, int);
+int *RandomizeNeighbourTile(int, int);
 char CurrentPlayerPenguinLetter(int);
 int FishesCountFromLetter(char);
-void CreateTilesTakenThisTurnArray();
+void CreateTilesWithCurrentPlayerPenguinsArray();
