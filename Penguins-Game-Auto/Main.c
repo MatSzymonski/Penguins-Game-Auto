@@ -35,10 +35,12 @@ int IndexOfPlayerWithScore(int);
 void StrCopy(char*, char*);
 
 //--------------------------MAIN----------------------------
-int main()
+int main(int argc, char *argv[])
 {	
+	    if (argv[1] == NULL || argv[2] == NULL) { printf("Incorrect command line arguments"); return 0; }
+
 		SetUpRandomizer();
-		ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
+		ReadDataFromInputFile(argv[1]); //Read data from InputFile (function in IOFileManager.c)
 		ReadIterationsFile(); //Read failedTurnsIterations from separate file (function in IOFileManager.c)
 		CheckGamePhase();
 	
@@ -51,7 +53,7 @@ int main()
 		else //MOVEMENT
 		{
 			CreateTilesWithCurrentPlayerPenguinsArray();
-			FindAllCurrentPlayerPenguins();	printf("1");
+			FindAllCurrentPlayerPenguins();
 			if (numberOfPenguinsBlocked == numberOfPenguinPerPlayer) //If all penguins are blocked add one more to failedTurnsIterations else move penguin
 			{
 				failedTurnsIterations++;
@@ -63,10 +65,9 @@ int main()
 			}
 		}
 		IncreaseCurrentPlayerIndex(); //Increase current player index
-		WriteDataToOutputFile(); //Create output file (function in IOFileManager.c)
+		WriteDataToOutputFile(argv[2]); //Create output file (function in IOFileManager.c)
 		WriteIterationsFile(); //Write failedTurnsIterations to separate file (function in IOFileManager.c)							 		
 	
-
 	return 0;
 }
 

@@ -19,11 +19,11 @@ char scoresRow[25]; //first row of datafile as string
 
 //---------------------READING-FROM-I/O-FILE---------------------------
 
-void ReadDataFromInputFile() //Loop through all lines of the InputFile and assign data to the variables
+void ReadDataFromInputFile(char *path) //Loop through all lines of the InputFile and assign data to the variables
 {
 	int line = 0;
 	numberOfMapRows = 0;
-	FILE* inputFile = fopen("data.txt", "r"); //Open the file for reading
+	FILE* inputFile = fopen(path, "r"); //Open the file for reading
 	if (inputFile == NULL) { printf("Error opening data file\n"); } //Check if the file has been opened
 	//else { printf("Success opening file\n"); } //[DEBUG]
 	char tempData[25]; //String where lines of text in the file will be stored temporary
@@ -70,10 +70,10 @@ void ReadPlayersScores() //Read players scores from IOFile to playersScoresArray
 
 //---------------------WRITING-TO-I/O-FILE---------------------------
 
-void WriteDataToOutputFile()
+void WriteDataToOutputFile(char *path)
 {
-	FILE* outputFile = fopen("data.txt", "w"); //Open the file for writing
-	if (outputFile == NULL) { printf("Error opening data file\n"); exit(0);  }
+	FILE* outputFile = fopen(path, "w"); //Open the file for writing
+	if (outputFile == NULL) { printf("Error opening data file\n"); exit(0); }
 	//else { printf("Success opening file\n"); } //[DEBUG]
 
 	int line;

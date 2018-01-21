@@ -2,8 +2,8 @@
 //-------------------FUNCTIONS-DECLARATION------------------
 
 void PrintDataFile();
-void ReadDataFromInputFile();
-void WriteDataToOutputFile();
+void ReadDataFromInputFile(char *);
+void WriteDataToOutputFile(char *);
 void ReadPlayersScores();
 void ReadIterationsFile();
 void WriteIterationsFile();

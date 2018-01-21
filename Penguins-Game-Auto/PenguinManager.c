@@ -86,12 +86,12 @@ int CheckIfIsBlocked(int r, int c) //Try to find free neighbour tile for penguin
 	if (iterations == 25) //25 failed attempts. Couldn't find free neighbour tile for this penguin. Penguin is blocked
 	{
 		numberOfPenguinsBlocked++; //Increase number of blocked penguins in this turn	
-		printf("Penguin on %d,%d is blocked\n", r, c); //[DEBUG]
+		//printf("Penguin on %d,%d is blocked\n", r, c); //[DEBUG]
 		return 1; //Blocked		
 	}	
 }
 
-int RandomizeTileAndChangeMap(int r, int c) //Find free neighbour tile for penguin on given coordinates
+void RandomizeTileAndChangeMap(int r, int c) //Find free neighbour tile for penguin on given coordinates
 {
     RandomizeNeighbourTile(r, c);
 	if (map[newTileR][newTileC] > 48 && map[newTileR][newTileC] < 52) //If there is a fish on randomized neighbour tile
@@ -144,7 +144,6 @@ void RandomizeNeighbourTile(int r, int c)
 		newTileC = c;
 		break;
 	}
-	return 0;
 }
 
 char CurrentPlayerPenguinLetter(int fishesOnTile) //Returns letter that mark penguin on map depending on fishes number and current player
