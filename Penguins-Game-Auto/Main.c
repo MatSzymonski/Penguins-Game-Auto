@@ -37,7 +37,6 @@ void StrCopy(char*, char*);
 //--------------------------MAIN----------------------------
 int main()
 {	
-
 		SetUpRandomizer();
 		ReadDataFromInputFile(); //Read data from InputFile (function in IOFileManager.c)
 		ReadIterationsFile(); //Read failedTurnsIterations from separate file (function in IOFileManager.c)
