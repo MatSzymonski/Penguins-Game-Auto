@@ -1,3 +1,5 @@
+//--------------------MATEUSZ-SZYMONSKI-----------------------
+
 #include <stdio.h>
 #include "PenguinManager.h" 
 

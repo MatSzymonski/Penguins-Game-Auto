@@ -73,6 +73,51 @@ int main(int argc, char *argv[])
 
 //------------------------OTHER-FUNCTIONS---------------------------
 
+void SetUpRandomizer()
+{
+	int seed;
+	time_t tt;
+	seed = time(&tt);
+	srand(seed);
+}
+
+void IncreaseCurrentPlayerIndex()
+{
+	if (currentPlayer == numberOfPlayers)
+	{
+		currentPlayer = 1;
+	}
+	else
+	{
+		currentPlayer++;
+	}
+}
+
+void CheckGamePhase()
+{
+	if (strncmp(gamePhase, "placement", 9) == 0)
+	{
+		if (numberOfPlacedPenguins >= numberOfPlayers * numberOfPenguinPerPlayer) //Change game phase if all players placed their penguins
+		{
+			StrCopy("movement ", gamePhase);
+		}
+	}
+}
+
+int IndexOfPlayerWithScore(int score) //Finding index of player with given score
+{
+	int i; for (i = 1; i < numberOfPlayers + 1; i++)
+	{
+		if (playersScores[i] == score)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
+//------------------------BARTOSZ-SWIETY-----------------------------
+
 void FinishTheGame() 
 {
 	//Create sorted array
@@ -105,46 +150,4 @@ void FinishTheGame()
 	}
 }
 
-void SetUpRandomizer() 
-{
-	int seed;
-	time_t tt;
-	seed = time(&tt);
-	srand(seed);
-}
-
-void IncreaseCurrentPlayerIndex()
-{
-	if (currentPlayer == numberOfPlayers)
-	{
-		currentPlayer = 1;
-	}
-	else
-	{
-		currentPlayer++;
-	}
-}
-
-void CheckGamePhase()
-{
-	if (strncmp(gamePhase, "placement", 9) == 0) 
-	{
-		if (numberOfPlacedPenguins >= numberOfPlayers * numberOfPenguinPerPlayer) //Change game phase if all players placed their penguins
-		{
-			StrCopy("movement ", gamePhase);
-		}
-	}
-}
-
-int IndexOfPlayerWithScore(int score) //Finding index of player with given score
-{
-	int i; for (i = 1; i < numberOfPlayers+1; i++)
-	{
-		if (playersScores[i] == score)
-		{
-			return i;
-		}
-	}
-	return 0;
-}
 
